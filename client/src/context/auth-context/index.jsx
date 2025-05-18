@@ -1,8 +1,19 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { initialSignInFormData, initialSignUpFormData } from "@/config";
-import { checkAuthService, loginService, registerService } from "@/services";
-import { createContext, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import {
+  initialSignInFormData,
+  initialSignUpFormData,
+} from "@/config";
+import {
+  checkAuthService,
+  loginService,
+  registerService,
+} from "@/services";
+import {
+  createContext,
+  useEffect,
+  useState,
+} from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -13,30 +24,26 @@ export default function AuthProvider({ children }) {
     authenticate: false,
     user: null,
   });
-  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   async function handleRegisterUser(event) {
     event.preventDefault();
     const data = await registerService(signUpFormData);
     if (data.success) {
-        console.log("Registered")
-       navigate("/")
-    
-  }
+      console.log("Registered");
+      navigate("/");
+    }
   }
 
   async function handleLoginUser(event) {
     event.preventDefault();
     const data = await loginService(signInFormData);
-    console.log(data, "datadatadatadatadata");
+    console.log("Login response:", data);
 
     if (data.success) {
-      sessionStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken)
-      );
+      sessionStorage.setItem("accessToken", JSON.stringify(data.data.accessToken));
       setAuth({
         authenticate: true,
         user: data.data.user,
@@ -49,33 +56,31 @@ export default function AuthProvider({ children }) {
     }
   }
 
-  //check auth user
-
   async function checkAuthUser() {
+    console.log("Running checkAuthUser...");
     try {
       const data = await checkAuthService();
+      console.log("Auth check result:", data);
+
       if (data.success) {
         setAuth({
           authenticate: true,
           user: data.data.user,
         });
-        setLoading(false);
       } else {
         setAuth({
           authenticate: false,
           user: null,
         });
-        setLoading(false);
       }
     } catch (error) {
-      console.log(error);
-      if (!error?.response?.data?.success) {
-        setAuth({
-          authenticate: false,
-          user: null,
-        });
-        setLoading(false);
-      }
+      console.error("Auth check failed:", error);
+      setAuth({
+        authenticate: false,
+        user: null,
+      });
+    } finally {
+      setLoading(false); // ✅ Always turn off loading
     }
   }
 
@@ -89,8 +94,6 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     checkAuthUser();
   }, []);
-
-  console.log(auth, "gf");
 
   return (
     <AuthContext.Provider
