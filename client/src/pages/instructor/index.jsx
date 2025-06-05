@@ -10,12 +10,12 @@ import { useContext, useEffect, useState } from "react";
 
 function InstructorDashboardpage() {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const { resetCredentials } = useContext(AuthContext);
+  const { resetCredentials,auth } = useContext(AuthContext);
   const { instructorCoursesList, setInstructorCoursesList } =
     useContext(InstructorContext);
 
   async function fetchAllCourses() {
-    const response = await fetchInstructorCourseListService();
+    const response = await fetchInstructorCourseDetailsService(auth?.user?._id);
     if (response?.success) setInstructorCoursesList(response?.data);
   }
 
