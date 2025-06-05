@@ -10,7 +10,9 @@ import { useContext, useEffect, useState } from "react";
 
 function InstructorDashboardpage() {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const { resetCredentials,auth } = useContext(AuthContext);
+  const { resetCredentials } = useContext(AuthContext);
+    const { auth } = useContext(AuthContext);
+
   const { instructorCoursesList, setInstructorCoursesList } =
     useContext(InstructorContext);
 
