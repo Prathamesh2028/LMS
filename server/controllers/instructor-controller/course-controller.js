@@ -1,4 +1,6 @@
 const Course = require("../../models/Course");
+const mongoose = require("mongoose");
+
 
 const addNewCourse = async (req, res) => {
   try {
@@ -42,9 +44,6 @@ const getAllCourses = async (req, res) => {
 const getCourseDetailsByID = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
-        console.log(id);
-
     const courseDetails = await Course.findOne({ _id: id });
 
     if (!courseDetails) {
@@ -53,10 +52,12 @@ const getCourseDetailsByID = async (req, res) => {
         message: "Course not found!",
       });
     }
+    console.log(courseDetails,'dddddddddddd');
 
     res.status(200).json({
       success: true,
       data: courseDetails,
+      message:"hhhhhhhhhhhhhhhhhhhh"
     });
   } catch (e) {
     console.log(e);
