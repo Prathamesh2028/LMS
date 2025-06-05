@@ -45,7 +45,7 @@ const getCourseDetailsByID = async (req, res) => {
     console.log(id);
         console.log(id);
 
-const courseDetails = await Course.find({ instructorId: id });
+const courseDetails = await Course.findById(id);
 
     if (!courseDetails) {
       return res.status(404).json({
