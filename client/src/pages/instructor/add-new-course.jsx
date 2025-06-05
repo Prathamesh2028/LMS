@@ -102,23 +102,22 @@ function AddNewCoursePage() {
       currentEditedCourseId
     );
 
-    if (response?.success) {
-      const setCourseFormData = Object.keys(
-        courseLandingInitialFormData
-      ).reduce((acc, key) => {
-        acc[key] = response?.data[key] || courseLandingInitialFormData[key];
 
-        return acc;
-      }, {});
+   if (response?.success) {
+    setAb(response?.data);
+  const setCourseFormData = Object.keys(courseLandingInitialFormData).reduce((acc, key) => {
+    acc[key] = response?.data[key] ?? courseLandingInitialFormData[key];
+    return acc;
+  }, {});
 
-      console.log(setCourseFormData, response?.data, "setCourseFormData");
-      setCourseLandingFormData(setCourseFormData);
-      setCourseCurriculumFormData(response?.data?.curriculum);
-    }
+  console.log(setCourseFormData, response?.data, "setCourseFormData");
 
-    console.log(response, "response");
+  setCourseLandingFormData(setCourseFormData);
+  setCourseCurriculumFormData(Array.isArray(response?.data?.curriculum) ? response.data.curriculum : []);
+}
+
+
   }
-
   useEffect(() => {
     if (currentEditedCourseId !== null) fetchCurrentCourseDetails();
   }, [currentEditedCourseId]);
